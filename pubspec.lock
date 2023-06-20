@@ -25,14 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
-  card_swiper:
-    dependency: "direct main"
-    description:
-      name: card_swiper
-      sha256: "0c94c538f47be1dab52d018d4900a7046b4cb0700dc7f95b8628da89d1212b35"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.4"
   characters:
     dependency: transitive
     description:
@@ -139,6 +131,14 @@ packages:
     description:
       name: flutter_bounceable
       sha256: "67af1eee931477c1ec144bb1d42b848048440c84f02963dcdede42a2dfec1390"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  flutter_carousel_slider:
+    dependency: "direct main"
+    description:
+      name: flutter_carousel_slider
+      sha256: "4cd0691b98ebbf8b40361e01779b3a211002c963d3709630e775fba699d3b821"
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"

@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:card_swiper/card_swiper.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:rick_and_morty/modules/home/home_controller.dart';
 import 'package:rick_and_morty/shared/constants/constants.dart';
@@ -26,52 +26,88 @@ class Home extends GetView<HomeController> {
         body: Obx(
           () {
             return controller.loading.value
-                ? Obx(
-                    () => Center(
-                      child: Text(
-                        "Veriler Yükleniyor... ${controller.percent.value}",
-                        style: AppTextStyle.cardText,
-                      ),
-                    ),
-                  )
-                : Column(
-                    children: [
-                      Expanded(
-                        flex: 7,
-                        child: Swiper(
-                          layout: SwiperLayout.CUSTOM,
-                          onIndexChanged: (value) {
-                            controller.counter.value = value + 1;
-                          },
-                          customLayoutOption:
-                              CustomLayoutOption(startIndex: -1, stateCount: 3)
-                                ..addRotate([-45.0 / 180, 0.0, 45.0 / 180])
-                                ..addTranslate([
-                                  Offset(-90.w, -6.h),
-                                  const Offset(0.0, 0.0),
-                                  Offset(90.w, -6.h)
-                                ]),
-                          itemWidth: 69.w,
-                          itemHeight: 70.h,
-                          itemBuilder: (context, index) {
-                            return FlipCard(
-                              fill: Fill.fillBack,
-                              direction: FlipDirection.HORIZONTAL,
-                              back: _CustomCardBack(index),
-                              front: _CustomCardFront(index),
-                            );
-                          },
-                          itemCount: controller.characters.length,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "${controller.counter.value.toString()}/${controller.characters.length}",
+                ? Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Veriler Yükleniyor...  ",
                           style: AppTextStyle.cardText,
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          height: 3.h,
+                          width: 3.h,
+                          child: CircularProgressIndicator(
+                            color: AppColors.black,
+                            strokeWidth: .7.w,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : Container(
+                    alignment: Alignment.center,
+                    height: 70.h,
+                    child: CarouselSlider.builder(
+                      onSlideChanged: (value) {
+                        controller.counter.value = value + 1;
+                      },
+                      slideTransform: const ForegroundToBackgroundTransform(),
+                      slideBuilder: (index) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 2.h,
+                            horizontal: 5.w,
+                          ),
+                          child: FlipCard(
+                            fill: Fill.fillBack,
+                            direction: FlipDirection.HORIZONTAL,
+                            back: _CustomCardBack(index),
+                            front: _CustomCardFront(index),
+                          ),
+                        );
+                      },
+                      itemCount: controller.characters.length,
+                    ),
                   );
+            // : Column(
+            //     children: [
+            //       Expanded(
+            //         flex: 7,
+            //         child: Swiper(
+            //           layout: SwiperLayout.CUSTOM,
+            //           onIndexChanged: (value) {
+            //             controller.counter.value = value + 1;
+            //           },
+            //           customLayoutOption:
+            //               CustomLayoutOption(startIndex: -1, stateCount: 3)
+            //                 ..addRotate([-45.0 / 180, 0.0, 45.0 / 180])
+            //                 ..addTranslate([
+            //                   Offset(-90.w, -6.h),
+            //                   const Offset(0.0, 0.0),
+            //                   Offset(90.w, -6.h)
+            //                 ]),
+            //           itemWidth: 69.w,
+            //           itemHeight: 65.h,
+            //           itemBuilder: (context, index) {
+            //             return FlipCard(
+            //               fill: Fill.fillBack,
+            //               direction: FlipDirection.HORIZONTAL,
+            //               back: _CustomCardBack(index),
+            //               front: _CustomCardFront(index),
+            //             );
+            //           },
+            //           itemCount: controller.characters.length,
+            //         ),
+            //       ),
+            //       Expanded(
+            //         child: Text(
+            //           "${controller.counter.value.toString()}/${controller.characters.length}",
+            //           style: AppTextStyle.cardText,
+            //         ),
+            //       ),
+            //     ],
+            //   );
           },
         ),
       ),
@@ -81,13 +117,17 @@ class Home extends GetView<HomeController> {
   Container _CustomCardBack(int index) {
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, .1.h),
-            color: AppColors.black,
-            blurRadius: 10.sp,
-          )
-        ],
+        border: Border.all(
+          color: AppColors.black,
+          width: .3.w,
+        ),
+        // boxShadow: [
+        //   BoxShadow(
+        //     offset: Offset(0, .1.h),
+        //     color: AppColors.black,
+        //     blurRadius: 10.sp,
+        //   )
+        // ],
         color:
             index.isEven ? AppColors.chapelBlue : AppColors.agedPlasticCasing,
         borderRadius: BorderRadius.circular(
@@ -189,15 +229,21 @@ class Home extends GetView<HomeController> {
       decoration: BoxDecoration(
         //MAYBE
         // image: DecorationImage(
-        //     image: NetworkImage(controller.characters[index]["image"]),
-        //     fit: BoxFit.cover),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, .1.h),
-            color: AppColors.black,
-            blurRadius: 10.sp,
-          )
-        ],
+        //   opacity: .15,
+        //   image: NetworkImage(controller.characters[index]["image"]),
+        //   fit: BoxFit.cover,
+        // ),
+        // boxShadow: [
+        //   BoxShadow(
+        //     offset: Offset(0, .1.h),
+        //     color: AppColors.black,
+        //     blurRadius: 10.sp,
+        //   )
+        // ],
+        border: Border.all(
+          color: AppColors.black,
+          width: .3.w,
+        ),
         color:
             index.isEven ? AppColors.chapelBlue : AppColors.agedPlasticCasing,
         borderRadius: BorderRadius.circular(
@@ -211,7 +257,9 @@ class Home extends GetView<HomeController> {
             flex: 5,
             child: ClipRRect(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(24.sp),
+                top: Radius.circular(
+                  24.sp,
+                ),
               ),
               child: SizedBox(
                 width: 100.w,
@@ -229,80 +277,102 @@ class Home extends GetView<HomeController> {
                 horizontal: 3.w,
                 vertical: 2.h,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "Name: ${controller.characters[index]["name"]}",
-                    style: AppTextStyle.cardText,
-                  ),
-                  Row(
+              child: Center(
+                child: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          "Species: ${controller.characters[index]["species"]}",
-                          style: AppTextStyle.cardText,
-                        ),
+                      Text(
+                        "Name: ${controller.characters[index]["name"]}",
+                        style: AppTextStyle.cardText,
                       ),
-                      Expanded(
-                        child: controller.characters[index]["species"] ==
-                                "Human"
-                            ? Images.human.svgWithScale
-                            : controller.characters[index]["species"] == "Robot"
-                                ? Images.robot.svgWithScale
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Species: ${controller.characters[index]["species"]}",
+                              style: AppTextStyle.cardText,
+                            ),
+                          ),
+                          Expanded(
+                            child: controller.characters[index]["species"] ==
+                                    "Human"
+                                ? Images.human.svgWithScale
                                 : controller.characters[index]["species"] ==
-                                        "Alien"
-                                    ? Images.alien.svgWithScale
-                                    : const SizedBox.shrink(),
+                                        "Robot"
+                                    ? Images.robot.svgWithScale
+                                    : controller.characters[index]["species"] ==
+                                            "Alien"
+                                        ? Images.alien.svgWithScale
+                                        : const SizedBox.shrink(),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          "Status: ${controller.characters[index]["status"]}",
-                          style: AppTextStyle.cardText,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Status: ${controller.characters[index]["status"]}",
+                              style: AppTextStyle.cardText,
+                            ),
+                          ),
+                          Expanded(
+                            child:
+                                controller.characters[index]["status"] == "Dead"
+                                    ? Images.dead.svgWithScale
+                                    : controller.characters[index]["status"] ==
+                                            "Alive"
+                                        ? Images.alive.svgWithScale
+                                        : const SizedBox.shrink(),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: controller.characters[index]["status"] == "Dead"
-                            ? Images.dead.svgWithScale
-                            : controller.characters[index]["status"] == "Alive"
-                                ? Images.alive.svgWithScale
-                                : const SizedBox.shrink(),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          "Gender: ${controller.characters[index]["gender"]}",
-                          style: AppTextStyle.cardText,
-                        ),
-                      ),
-                      Expanded(
-                        child: controller.characters[index]["gender"] ==
-                                "Genderless"
-                            ? Images.genderless.svgWithScale
-                            : controller.characters[index]["gender"] == "Male"
-                                ? Images.man.svgWithScale
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "Gender: ${controller.characters[index]["gender"]}",
+                              style: AppTextStyle.cardText,
+                            ),
+                          ),
+                          Expanded(
+                            child: controller.characters[index]["gender"] ==
+                                    "Genderless"
+                                ? Images.genderless.svgWithScale
                                 : controller.characters[index]["gender"] ==
-                                        "Female"
-                                    ? Images.woman.svgWithScale
-                                    : const SizedBox.shrink(),
-                      )
+                                        "Male"
+                                    ? Images.man.svgWithScale
+                                    : controller.characters[index]["gender"] ==
+                                            "Female"
+                                        ? Images.woman.svgWithScale
+                                        : const SizedBox.shrink(),
+                          )
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
-          )
+          ),
+          SizedBox(
+            width: 80.w,
+            child: Text(
+              "${controller.counter.value.toString()}/${controller.characters.length}",
+              textAlign: TextAlign.right,
+              style: AppTextStyle.cardText.copyWith(
+                fontSize: 13.sp,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 1.h,
+          ),
         ],
       ),
     );

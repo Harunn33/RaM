@@ -7,7 +7,6 @@ class HomeController extends GetxController {
   RxList<dynamic> charactersByIds = [].obs;
   Map<String, dynamic> info = {};
   RxBool loading = false.obs;
-  RxString percent = "".obs;
   RxInt counter = 1.obs;
 
   @override
@@ -40,7 +39,6 @@ class HomeController extends GetxController {
         ),
       );
       charactersByIds.addAll(querycharactersByIds.data!['charactersByIds']);
-      percent.value = "%${((i / characters.length) * 100).toStringAsFixed(2)}";
     }
     loading.value = false;
   }
